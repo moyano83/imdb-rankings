@@ -17,36 +17,36 @@ object TitleAka{
   val schema = StructType(
     Seq(
       StructField(Id, StringType, false),
-      StructField(Ordering, IntegerType, false),
+      StructField(Ordering, StringType, false),
       StructField(Title, StringType, false),
-      StructField(Region, StringType, true),
+      StructField(Region, StringType, false),
       StructField(Language, StringType, false),
       StructField(Types, StringType, false),
       StructField(Attributes, StringType, false),
-      StructField(OriginalTitle, BooleanType, false)
+      StructField(OriginalTitle, StringType, false)
     )
   )
 
   def fromRow(row:Row):TitleAka = {
     TitleAka(
       row.getAs[String](Id),
-      row.getAs[Int](Ordering),
+      row.getAs[String](Ordering),
       row.getAs[String](Title),
       row.getAs[String](Region),
       row.getAs[String](Language),
       row.getAs[String](Types),
       row.getAs[String](Attributes),
-      row.getAs[Boolean](OriginalTitle)
+      row.getAs[String](OriginalTitle)
     )
   }
 }
 
 
 case class TitleAka (titleId:String,
-                      ordering:Int,
+                      ordering:String,
                       title:String,
                       region:String,
                       language:String,
                       types:String,
                       attributes:String,
-                      isOriginalTitle:Boolean)
+                      isOriginalTitle:String)

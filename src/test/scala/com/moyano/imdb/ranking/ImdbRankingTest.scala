@@ -38,12 +38,12 @@ class ImdbRankingTest extends FlatSpec with Matchers {
     override def loadMovieTitles():DataFrame =
       session.sparkContext.parallelize(
         List(
-          TitleAka("1", 1, "MatrixEN", "EN", "EN", "", "",  false),
-          TitleAka("1", 2, "MatrixES", "ES", "ES", "", "",  false),
-          TitleAka("2", 1, "HeatEN", "EN", "EN", "", "",  false),
-          TitleAka("2", 2, "HeatES", "EN", "EN", "", "",  false),
-          TitleAka("3", 1, "AmelieEN", "EN", "EN", "", "",  false),
-          TitleAka("4", 1, "ShrekEN", "EN", "EN", "", "",  false)
+          TitleAka("1", "1", "MatrixEN", "EN", "EN", "", "",  ""),
+          TitleAka("1", "2", "MatrixES", "ES", "ES", "", "",  ""),
+          TitleAka("2", "1", "HeatEN", "EN", "EN", "", "",  ""),
+          TitleAka("2", "2", "HeatES", "EN", "EN", "", "",  ""),
+          TitleAka("3", "1", "AmelieEN", "EN", "EN", "", "",  ""),
+          TitleAka("4", "1", "ShrekEN", "EN", "EN", "", "",  "")
         )).toDF
 
     override def loadAllMovies(): DataFrame = session.sparkContext.parallelize(
@@ -96,6 +96,7 @@ class ImdbRankingTest extends FlatSpec with Matchers {
   }
 
   "The App " should "get the crew names and titles of the films" in {
+    val resultsCount = 3
     val expected = Array(
       TitlesAndPersons(
         "Heat",
@@ -113,8 +114,14 @@ class ImdbRankingTest extends FlatSpec with Matchers {
         Array("Name2")
       )
     )
-    imdbReal.getTitlesAndPersons(None).foreach(println(_))
-    //imdb.getTitlesAndPersons(None,3) should be(expected)
+    val result = imdb.getTitlesAndPersons(None,resultsCount)
+    for(i <- 0 until resultsCount){
+      expected(i).name should be (result(i).name)
+      expected(i).movieTitles.deep should be (result(i).movieTitles.deep)
+      expected(i).crew.deep should be (result(i).crew.deep)
+    }
+
   }
+
 
 }

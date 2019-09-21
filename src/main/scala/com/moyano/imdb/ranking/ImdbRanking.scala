@@ -79,14 +79,11 @@ class ImdbRanking(config:AppConfig, session:SparkSession) extends ImdbRankingPro
       .map(CrewItem.fromRow(_))
       .collect()
 
-    val movieTitlesT = loadMovieTitles()
-    movieTitlesT.persist(StorageLevel.MEMORY_ONLY)
-
-    val movieTitles = movieTitlesT
+    val movieTitles = loadMovieTitles()
       .filter(col(TitleAka.Id) isin (bestRankedMovies.map(_.id).toList:_*))
       .map(TitleAka.fromRow(_))
       .collect()
-    movieTitlesT.unpersist()
+
     bestRankedMovies.map(movie =>
       TitlesAndPersons(
         movie.name,
